@@ -15,26 +15,26 @@ int indice = 0;
 void aggiungiCanzone() {
     Canzone *nuovaCanzone = malloc(sizeof(Canzone));
     printf("Inserisci il titolo della canzone: ");
-    getchar();
-    scanf("%s", nuovaCanzone->titolo);
+    fgets(nuovaCanzone->titolo, 100, stdin);
     printf("Inserisci l'artista della canzone: ");
-    scanf("%s", nuovaCanzone->artista);
+    fgets(nuovaCanzone->artista, 100, stdin);
     printf("Inserisci il tempo in minuti della canzone: ");
-    scanf("%d", &nuovaCanzone->minuti);
+    char *minuti;
+    fgets(minuti, 100, stdin);
+    nuovaCanzone->minuti = strtol(minuti, NULL, 10);
     printf("Inserisci i secondi della canzone: ");
-    scanf("%hd", &nuovaCanzone->secondi);
+    char *secondi;
+    fgets(secondi, 100, stdin);
+    nuovaCanzone->secondi = strtol(secondi, NULL, 10);
     if (libreria[grandezza - 1].titolo!= NULL) {
         libreria[indice] = *nuovaCanzone;
-        printf("Canzone aggiunta con successo!\n");
-        indice++;
-        printf("Premere un tasto per tornare al menù principale...\n");
-        getchar();
-        return;
+    } else {
+        libreria = realloc(libreria, sizeof(Canzone) * (grandezza * 2));
+        grandezza *= 2;
+        libreria[indice] = *nuovaCanzone;
     }
-    libreria = realloc(libreria, sizeof(Canzone) * (grandezza * 2));
-    grandezza *= 2;
-    libreria[indice] = *nuovaCanzone;
     printf("Canzone aggiunta con successo!\n");
+    indice++;
     printf("Premere un tasto per tornare al menù principale...\n");
     getchar();
     return;
