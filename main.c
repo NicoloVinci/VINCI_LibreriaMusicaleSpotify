@@ -14,19 +14,45 @@ int indice = 0;
 
 void aggiungiCanzone() {
     Canzone *nuovaCanzone = malloc(sizeof(Canzone));
+    nuovaCanzone->titolo = malloc(sizeof(char) * 100);
+    nuovaCanzone->artista = malloc(sizeof(char) * 100);
     printf("Inserisci il titolo della canzone: ");
     fgets(nuovaCanzone->titolo, 100, stdin);
+    int i = 0;
+    while (nuovaCanzone->titolo[i] != '\0') {
+        i++;
+    }
+    if (i > 0 && nuovaCanzone->titolo[i-1] == '\n') {
+        nuovaCanzone->titolo[i-1] = '\0';
+    }
     printf("Inserisci l'artista della canzone: ");
     fgets(nuovaCanzone->artista, 100, stdin);
+    i = 0;
+    while (nuovaCanzone->artista[i] != '\0') {
+        i++;
+    }
+    if (i > 0 && nuovaCanzone->artista[i-1] == '\n') {
+        nuovaCanzone->artista[i-1] = '\0';
+    }
     printf("Inserisci il tempo in minuti della canzone: ");
-    char *minuti;
-    fgets(minuti, 100, stdin);
-    nuovaCanzone->minuti = strtol(minuti, NULL, 10);
+    char buffer[100];
+    char *endptr;
+    fgets(buffer, 100, stdin);
+    nuovaCanzone->minuti = strtol(buffer, &endptr, 10);
+    while (endptr == buffer) {
+        printf("Formato non valido. Inserisci il tempo in minuti della canzone: ");
+        fgets(buffer, 100, stdin);
+        nuovaCanzone->minuti = strtol(buffer, &endptr, 10);
+    }
     printf("Inserisci i secondi della canzone: ");
-    char *secondi;
-    fgets(secondi, 100, stdin);
-    nuovaCanzone->secondi = strtol(secondi, NULL, 10);
-    if (libreria[grandezza - 1].titolo!= NULL) {
+    fgets(buffer, 100, stdin);
+    nuovaCanzone->secondi = strtol(buffer, &endptr, 10);
+    while (endptr == buffer) {
+        printf("Formato non valido. Inserisci i secondi della canzone: ");
+        fgets(buffer, 100, stdin);
+        nuovaCanzone->secondi = strtol(buffer, &endptr, 10);
+    }
+    if (indice < grandezza) {
         libreria[indice] = *nuovaCanzone;
     } else {
         libreria = realloc(libreria, sizeof(Canzone) * (grandezza * 2));
@@ -41,9 +67,8 @@ void aggiungiCanzone() {
 }
 
 void visualizzaLibreria() {
-    printf("Titolo\tArtista\tTempo\n");
     for (int i = 0; i < indice; i++) {
-        printf("%s\t%s\t%d:%02d\n", libreria[i].titolo, libreria[i].artista, libreria[i].minuti, libreria[i].secondi);
+        printf("Titolo: %s\nArtista: %s\nDurata: %d:%02d\n\n", libreria[i].titolo, libreria[i].artista, libreria[i].minuti, libreria[i].secondi);
     }
     printf("Premere un tasto per tornare al menù principale...\n");
     getchar();
@@ -59,6 +84,7 @@ int main(void) {
         printf("3. Esci\n");
         int scelta;
         scanf("%d", &scelta);
+        getchar();
         switch (scelta) {
             case 1:
                 system("clear");
