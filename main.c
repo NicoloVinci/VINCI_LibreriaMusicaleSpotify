@@ -9,8 +9,47 @@ typedef struct {
 } Canzone;
 
 Canzone *libreria;
+int grandezza = 5;
+int indice = 0;
+
+void aggiungiCanzone() {
+    Canzone *nuovaCanzone = malloc(sizeof(Canzone));
+    printf("Inserisci il titolo della canzone: ");
+    getchar();
+    scanf("%s", nuovaCanzone->titolo);
+    printf("Inserisci l'artista della canzone: ");
+    scanf("%s", nuovaCanzone->artista);
+    printf("Inserisci il tempo in minuti della canzone: ");
+    scanf("%d", &nuovaCanzone->minuti);
+    printf("Inserisci i secondi della canzone: ");
+    scanf("%hd", &nuovaCanzone->secondi);
+    if (libreria[grandezza - 1].titolo!= NULL) {
+        libreria[indice] = *nuovaCanzone;
+        printf("Canzone aggiunta con successo!\n");
+        indice++;
+        printf("Premere un tasto per tornare al menù principale...\n");
+        getchar();
+        return;
+    }
+    libreria = realloc(libreria, sizeof(Canzone) * (grandezza * 2));
+    grandezza *= 2;
+    libreria[indice] = *nuovaCanzone;
+    printf("Canzone aggiunta con successo!\n");
+    printf("Premere un tasto per tornare al menù principale...\n");
+    getchar();
+    return;
+}
+
+void visualizzaLibreria() {
+    printf("Titolo\tArtista\tTempo\n");
+    for (int i = 0; i < indice; i++) {
+        printf("%s\t%s\t%d:%02d\n", libreria[i].titolo, libreria[i].artista, libreria[i].minuti, libreria[i].secondi);
+    }
+    printf("Premere un tasto per tornare al menù principale...\n");
+    getchar();
+}
 int main(void) {
-    libreria = malloc(sizeof(Canzone) * 10);
+    libreria = (Canzone *) malloc(sizeof(Canzone) * 10);
     do {
         system("clear");
         printf("Benvenuto nella libreria musicale.\n");
@@ -39,6 +78,6 @@ int main(void) {
                 getchar();
         }
     } while (1);
-    printf("Hello, World!\n");
+    free(libreria);
     return 0;
 }
